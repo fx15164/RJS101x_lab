@@ -4,6 +4,7 @@ import Header from './HeaderComponent';
 import Menu from './MenuComponent';
 import Footer from './FooterComponent';
 import Home from './HomeComponent';
+import DishDetail from './DishDetailComponent';
 import Contact from './ContactComponent';
 import { DISHES } from '../shared/dishes';
 import { COMMENTS } from '../shared/comments';
@@ -28,7 +29,7 @@ class Main extends Component {
 
     render() {
 
-        const { dishes, promotions, leaders } = this.state;
+        const { dishes, promotions, leaders, comments } = this.state;
 
         const HomePage = () => {
             return(
@@ -40,12 +41,19 @@ class Main extends Component {
             );
           }
 
+        const DishWithId = ({ match }) => 
+            <DishDetail 
+                dish={dishes.filter(dish => dish.id == match.params.dishId)[0]} 
+                comments={comments.filter(comment => comment.dishId == match.params.dishId)}
+            />
+
         return (
             <div>
                 <Header />
                 <Switch>
                     <Route path='/home' component={HomePage} />
-                    <Route path='/menu' component={() => <Menu dishes={this.state.dishes} />} />
+                    <Route exact path='/menu' component={() => <Menu dishes={this.state.dishes} />} />
+                    <Route path='/menu/:dishId' component={DishWithId} />
                     <Route path='/contactus' component={Contact} />
                     <Redirect to='/home' />
                 </Switch>
