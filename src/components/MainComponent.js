@@ -6,22 +6,10 @@ import Footer from './FooterComponent';
 import Home from './HomeComponent';
 import DishDetail from './DishDetailComponent';
 import Contact from './ContactComponent';
-import { DISHES } from '../shared/dishes';
-import { COMMENTS } from '../shared/comments';
-import { PROMOTIONS } from '../shared/promotions';
-import { LEADERS } from '../shared/leaders';
+import {withRouter} from 'react-router-dom';
+import {connect} from 'react-redux';
 
 class Main extends Component {
-
-    constructor(props) {
-        super(props);
-        this.state = {
-            dishes: DISHES,
-            comments: COMMENTS,
-            promotions: PROMOTIONS,
-            leaders: LEADERS
-        };
-    }
 
     onDishSelect(dishId) {
         this.setState({ selectedDish: dishId });
@@ -29,7 +17,7 @@ class Main extends Component {
 
     render() {
 
-        const { dishes, promotions, leaders, comments } = this.state;
+        const { dishes, promotions, leaders, comments } = this.props;
 
         const HomePage = () => {
             return(
@@ -52,7 +40,7 @@ class Main extends Component {
                 <Header />
                 <Switch>
                     <Route path='/home' component={HomePage} />
-                    <Route exact path='/menu' component={() => <Menu dishes={this.state.dishes} />} />
+                    <Route exact path='/menu' component={() => <Menu dishes={dishes} />} />
                     <Route path='/menu/:dishId' component={DishWithId} />
                     <Route path='/contactus' component={Contact} />
                     <Redirect to='/home' />
@@ -63,4 +51,13 @@ class Main extends Component {
     }
 }
 
-export default Main;
+const mapStateToProps = state => {
+	return {
+            dishes: state.dishes,
+            comments: state.comments,
+            promotions: state.promotions,
+            leaders: state.leaders
+        };
+}
+
+export default withRouter(connect(mapStateToProps)(Main));
