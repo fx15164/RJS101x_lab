@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import { Form, Field } from 'react-final-form';
-import { matchPath } from 'react-router-dom';
 import {
-    FormFeedback,
+    Form as Formx,
     Button, FormGroup, Label, Input, Col
 } from 'reactstrap';
 
@@ -19,8 +18,16 @@ class Contact extends Component {
     }
 
 
-
     render() {
+
+        const required = (val) => val ? undefined : 'Required';
+        const maxLength = (len) => (val) => !(val) || (val.length <= len) ? undefined : `Must be ${len} characters or less`;
+        const minLength = (len) => (val) => val && (val.length >= len) ? undefined : `'Must be greater than ${len} characters`;
+        const isNumber = (val) => !isNaN(Number(val)) ? undefined : 'Must be a number';
+        const validEmail = (val) => /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(val) ? undefined : 'Invalid Email Address';
+        const composeValidators = (...validators) => value =>
+            validators.reduce((error, validator) => error || validator(value), undefined)
+
         return (
             <div className="container">
                 <div className="row row-content">
@@ -57,9 +64,9 @@ class Contact extends Component {
                     <div className='col-12 col-md-9'>
                         <Form
                             onSubmit={this.handleSubmit}
-                            render={({ handleSubmit }) => (
-                                <form onSubmit={handleSubmit}>
-                                    <Field name='firstname'>
+                            render={({ handleSubmit, pristine, form, submitting }) => (
+                                <Formx onSubmit={handleSubmit}>
+                                    <Field name='firstname' validate={composeValidators(required, minLength(3), maxLength(15))}>
                                         {({ input, meta }) => (
                                             <FormGroup row>
                                                 <Label htmlFor='firstname' md={2}>Firstname</Label>
@@ -69,12 +76,12 @@ class Contact extends Component {
                                                         type='text' id='firstname'
                                                         placeholder="First name"
                                                     />
-                                                    {meta.touched && meta.error && <FormFeedback>{meta.error}</FormFeedback>}
+                                                    {meta.touched && meta.error && <div className='text-danger'>{meta.error}</div>}
                                                 </Col>
                                             </FormGroup>
                                         )}
                                     </Field>
-                                    <Field name='lastname'>
+                                    <Field name='lastname' validate={composeValidators(required, minLength(2), maxLength(15))}>
                                         {({ input, meta }) => (
                                             <FormGroup row>
                                                 <Label htmlFor='lastname' md={2}>Lastname</Label>
@@ -84,12 +91,12 @@ class Contact extends Component {
                                                         type='text' id='lastname'
                                                         placeholder="Lirst name"
                                                     />
-                                                    {meta.touched && meta.error && <FormFeedback>{meta.error}</FormFeedback>}
+                                                    {meta.touched && meta.error && <div className='text-danger'>{meta.error}</div>}
                                                 </Col>
                                             </FormGroup>
                                         )}
                                     </Field>
-                                    <Field name='telnum'>
+                                    <Field name='telnum' validate={composeValidators(required, minLength(2), maxLength(15), isNumber)}>
                                         {({ input, meta }) => (
                                             <FormGroup row>
                                                 <Label htmlFor='telnum' md={2}>telnum</Label>
@@ -99,12 +106,12 @@ class Contact extends Component {
                                                         type='tel' id='telnum'
                                                         placeholder="Contact Tel"
                                                     />
-                                                    {meta.touched && meta.error && <FormFeedback>{meta.error}</FormFeedback>}
+                                                    {meta.touched && meta.error && <div className='text-danger'>{meta.error}</div>}
                                                 </Col>
                                             </FormGroup>
                                         )}
                                     </Field>
-                                    <Field name='email'>
+                                    <Field name='email' validate={composeValidators(required, minLength(2), maxLength(15), validEmail)}>
                                         {({ input, meta }) => (
                                             <FormGroup row>
                                                 <Label htmlFor='email' md={2}>Email</Label>
@@ -114,7 +121,7 @@ class Contact extends Component {
                                                         type='text' id='email'
                                                         placeholder="Lirst name"
                                                     />
-                                                    {meta.touched && meta.error && <FormFeedback>{meta.error}</FormFeedback>}
+                                                    {meta.touched && meta.error && <div className='text-danger'>{meta.error}</div>}
                                                 </Col>
                                             </FormGroup>
                                         )}
@@ -165,12 +172,12 @@ class Contact extends Component {
                                     </Field>
                                     <FormGroup row>
                                         <Col md={{ size: 10, offset: 2 }}>
-                                            <Button type='submit' color='primary'>
+                                            <Button type='submit' onClick={form.reset} disabled={submitting || pristine} color='primary'>
                                                 Send your Feedback
                                             </Button>
                                         </Col>
                                     </FormGroup>
-                                </form>
+                                </Formx>
                             )}
                         />
                     </div>
