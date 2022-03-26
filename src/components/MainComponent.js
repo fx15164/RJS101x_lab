@@ -8,12 +8,16 @@ import DishDetail from './DishDetailComponent';
 import Contact from './ContactComponent';
 import {withRouter} from 'react-router-dom';
 import {connect} from 'react-redux';
-import { addComment } from '../redux/actionCreators';
+import { addComment, fetchDishes } from '../redux/actionCreators';
 
 class Main extends Component {
 
     onDishSelect(dishId) {
         this.setState({ selectedDish: dishId });
+    }
+
+    componentDidMount() {
+        this.props.fetchDishes();
     }
 
     render() {
@@ -23,7 +27,9 @@ class Main extends Component {
         const HomePage = () => {
             return(
                 <Home 
-                    dish={dishes.filter(dish => dish.featured)[0]}
+					dishesLoading={dishes.isLoading}
+					errMess={dishes.errMess}
+                    dish={dishes.dishes.filter(dish => dish.featured)[0]}
                     promotion={promotions.filter(promotion => promotion.featured)[0]}
                     leader={leaders.filter(leader => leader.featured)[0]}
                 />
@@ -32,7 +38,9 @@ class Main extends Component {
 
         const DishWithId = ({ match }) => 
             <DishDetail 
-                dish={dishes.filter(dish => dish.id == match.params.dishId)[0]} 
+                dish={dishes.dishes.filter(dish => dish.id == match.params.dishId)[0]} 
+				dishesLoading={dishes.isLoading}
+				errMess={dishes.errMess}
                 comments={comments.filter(comment => comment.dishId == match.params.dishId)}
 				addComment={addComment}
             />
@@ -42,7 +50,7 @@ class Main extends Component {
                 <Header />
                 <Switch>
                     <Route path='/home' component={HomePage} />
-                    <Route exact path='/menu' component={() => <Menu dishes={dishes} />} />
+                    <Route exact path='/menu' component={() => <Menu dishes={dishes.dishes} />} />
                     <Route path='/menu/:dishId' component={DishWithId} />
                     <Route path='/contactus' component={Contact} />
                     <Redirect to='/home' />
@@ -54,7 +62,8 @@ class Main extends Component {
 }
 
 const mapDispatchToProps = dispatch => ({
-	addComment: (dishId, rating, name, comment) => dispatch(addComment(dishId, rating, name, comment))
+	addComment: (dishId, rating, name, comment) => dispatch(addComment(dishId, rating, name, comment)),
+    fetchDishes: () => dispatch(fetchDishes())
 })
 
 const mapStateToProps = state => {
