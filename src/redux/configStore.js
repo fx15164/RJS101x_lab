@@ -17,7 +17,7 @@ export const configStore = () => {
 			leaders,
 			form: formReducer
 		}),
-		applyMiddleware(thunk)
+		applyMiddleware(thunk, logger)
 	)
 	return store
 }

@@ -3,6 +3,7 @@ import {Link} from "react-router-dom";
 import {Breadcrumb, BreadcrumbItem, Card, CardBody, CardImg, CardText, CardTitle} from "reactstrap";
 import CommentForm from './CommentForm';
 import Loading from './LoadingComponent';
+import { baseUrl } from '../shared/baseUrl';
 
 function RenderComments({comments}) {
 	if (comments) {
@@ -10,8 +11,8 @@ function RenderComments({comments}) {
 			<div>
 				<h4>Comments</h4>
 				<ul className="list-unstyled ">
-					{comments.map(comment => (
-						<li key={comment.id}>
+					{comments.map((comment, i) => (
+						<li key={i}>
 							<p>{comment.comment}</p>
 							<p>{`-- ${comment.author}, ${new Intl.DateTimeFormat('en-US', {year: 'numeric', month: 'short', day: '2-digit'}).format(new Date(Date.parse(comment.date)))}`}</p>
 						</li>
@@ -30,7 +31,7 @@ function RenderComments({comments}) {
 function RenderDish({dish}) {
 	return (
 		<Card>
-			<CardImg width="100%" src={dish.image} alt={dish.name} />
+			<CardImg width="100%" src={baseUrl + dish.image} alt={dish.name} />
 			<CardBody>
 				<CardTitle>{dish.name}</CardTitle>
 				<CardText>{dish.description}</CardText>

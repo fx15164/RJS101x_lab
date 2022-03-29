@@ -9,7 +9,7 @@ import Contact from './ContactComponent';
 import {withRouter} from 'react-router-dom';
 import {connect} from 'react-redux';
 import { reset } from 'redux-form';
-import { addComment, fetchDishes } from '../redux/actionCreators';
+import { addComment, fetchComments, fetchDishes, fetchPromos } from '../redux/actionCreators';
 
 class Main extends Component {
 
@@ -19,6 +19,8 @@ class Main extends Component {
 
     componentDidMount() {
         this.props.fetchDishes();
+		this.props.fetchComments();
+		this.props.fetchPromos();
     }
 
     render() {
@@ -29,9 +31,11 @@ class Main extends Component {
             return(
                 <Home 
 					dishesLoading={dishes.isLoading}
-					errMess={dishes.errMess}
+					dishErrMess={dishes.errMess}
                     dish={dishes.dishes.filter(dish => dish.featured)[0]}
-                    promotion={promotions.filter(promotion => promotion.featured)[0]}
+					promoLoading={promotions.isLoading}
+					promoErrMess={promotions.errMess}
+                    promotion={promotions.promotions.filter(promotion => promotion.featured)[0]}
                     leader={leaders.filter(leader => leader.featured)[0]}
                 />
             );
@@ -42,7 +46,8 @@ class Main extends Component {
                 dish={dishes.dishes.filter(dish => dish.id == match.params.dishId)[0]} 
 				dishesLoading={dishes.isLoading}
 				errMess={dishes.errMess}
-                comments={comments.filter(comment => comment.dishId == match.params.dishId)}
+                comments={comments.comments.filter(comment => comment.dishId == match.params.dishId)}
+				commentsErrMess={comments.comments.errMess}
 				addComment={addComment}
             />
 
@@ -65,6 +70,8 @@ class Main extends Component {
 const mapDispatchToProps = dispatch => ({
 	addComment: (dishId, rating, name, comment) => dispatch(addComment(dishId, rating, name, comment)),
     fetchDishes: () => dispatch(fetchDishes()),
+	fetchComments: () => dispatch(fetchComments()),
+	fetchPromos: () => dispatch(fetchPromos()),
 	resetFeedbackForm: () => dispatch(reset('feedback'))
 })
 
