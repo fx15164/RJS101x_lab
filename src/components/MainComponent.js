@@ -9,7 +9,7 @@ import Contact from './ContactComponent';
 import {withRouter} from 'react-router-dom';
 import {connect} from 'react-redux';
 import { reset } from 'redux-form';
-import { addComment, fetchComments, fetchDishes, fetchPromos } from '../redux/actionCreators';
+import { addComment, fetchComments, fetchDishes, fetchPromos, postComment } from '../redux/actionCreators';
 
 class Main extends Component {
 
@@ -25,7 +25,7 @@ class Main extends Component {
 
     render() {
 
-        const { dishes, promotions, leaders, comments, addComment, resetFeedbackForm} = this.props;
+        const { dishes, promotions, leaders, comments, postComment, resetFeedbackForm} = this.props;
 
         const HomePage = () => {
             return(
@@ -48,7 +48,7 @@ class Main extends Component {
 				errMess={dishes.errMess}
                 comments={comments.comments.filter(comment => comment.dishId == match.params.dishId)}
 				commentsErrMess={comments.comments.errMess}
-				addComment={addComment}
+				postComment={postComment}
             />
 
         return (
@@ -68,7 +68,7 @@ class Main extends Component {
 }
 
 const mapDispatchToProps = dispatch => ({
-	addComment: (dishId, rating, name, comment) => dispatch(addComment(dishId, rating, name, comment)),
+	postComment: (dishId, rating, name, comment) => dispatch(postComment(dishId, rating, name, comment)),
     fetchDishes: () => dispatch(fetchDishes()),
 	fetchComments: () => dispatch(fetchComments()),
 	fetchPromos: () => dispatch(fetchPromos()),

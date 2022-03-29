@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {Field, Form} from 'react-final-form';
 import {Button, Modal, ModalBody, FormFeedback, Form as RsForm, FormGroup, Label, Input} from 'reactstrap';
 
-const CommentForm = ({ dish, addComment }) => {
+const CommentForm = ({ dish, postComment }) => {
 	const [isOpen, setIsOpen] = useState(false);
 
 	const minLength = len => val => (!val || val.length < len ? `Must be greater than ${len} characters` : undefined);
@@ -13,7 +13,7 @@ const CommentForm = ({ dish, addComment }) => {
 	const toogleForm = () => setIsOpen(!isOpen);
 	const onSubmit = (values) => {
 		toogleForm();
-		addComment(dish.id, values.rating, values.author, values.comment);
+		postComment(dish.id, values.rating, values.author, values.comment);
 	}
 	return (
 		<div>

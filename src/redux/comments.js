@@ -8,8 +8,6 @@ export default (state = {errMess: null, comments: []}, action) => {
 			return {...state, errMess: action.payload};
 		case ADD_COMMENT:
 			let comment = action.payload;
-			comment.id = state.length;
-			comment.date = new Date().toISOString();
 			console.log("Comment: ", comment);
 			return {...state, comments: [...state.comments, comment]};
 		default:

@@ -40,7 +40,7 @@ function RenderDish({dish}) {
 	)
 }
 
-const DishDetail = ({dish, comments, addComment, dishesLoading, errMess}) => {
+const DishDetail = ({dish, comments, postComment, dishesLoading, errMess}) => {
 	if (dishesLoading) {
 		return (
 			<div className="container">
@@ -70,8 +70,8 @@ const DishDetail = ({dish, comments, addComment, dishesLoading, errMess}) => {
 						<RenderDish dish={dish} />
 					</div>
 					<div className="col-12 col-md-5 m-1">
-						<RenderComments comments={comments} addComment={addComment} />
-						<CommentForm dish={dish} addComment={addComment} />
+						<RenderComments comments={comments} />
+						<CommentForm dish={dish} postComment={postComment} />
 					</div>
 				</div>
 			</div>

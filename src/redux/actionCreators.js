@@ -1,5 +1,5 @@
 import {ADD_COMMENT, ADD_COMMENTS, ADD_DISHES, ADD_PROMOS, COMMENTS_FAILED, DISHES_FAILED, DISHES_LOADING, PROMOS_FAILED, PROMOS_LOADING} from './ActionTypes';
-import { baseUrl } from '../shared/baseUrl';
+import {baseUrl} from '../shared/baseUrl';
 
 export const fetchDishes = () => {
 	return dispatch => fetch(baseUrl + 'dishes')
@@ -33,7 +33,7 @@ export const dishesFailed = () => ({
 
 export const addDishes = (dishes) => ({
 	type: ADD_DISHES,
-	payload: dishes 
+	payload: dishes
 })
 
 export const fetchComments = () => dispatch => {
@@ -98,14 +98,45 @@ export const addPromos = (promos) => ({
 	payload: promos
 })
 
-export const addComment = (dishId, rating, name, comment) => {
-	return {
-		type: ADD_COMMENT,
-		payload: { dishId, rating, name, comment }
-	}
-}
-
 export const promosFailed = errMess => ({
 	type: PROMOS_FAILED,
 	payload: errMess
 })
+
+export const postComment = (dishId, rating, author, comment) => dispatch => {
+	const newComment = {dishId, rating, author, comment};
+	newComment.date = new Date().toISOString();
+
+	return fetch(baseUrl + 'comments', {
+		method: 'POST',
+		body: JSON.stringify(newComment),
+		headers: {
+			"Content-Type": "application/json"
+		},
+		credentials: "same-origin"
+	})
+	.then(
+		res => {
+			if (res.ok) {
+				return res;
+			} else {
+				const err = new Error(`Error ${res.status}: ${res.statusText}`);
+				throw err;
+			}
+		},
+		err => {
+			throw new Error(err.message);
+		}
+	)
+		.then(res => res.json())
+		.then(res => dispatch(addComment(res)))
+		.catch(err => { console.log('post comments', err.message); alert('Your comment could not be posted\nError: '+err.message); })
+}
+
+export const addComment = comment => {
+	return {
+		type: ADD_COMMENT,
+		payload: comment 
+	}
+}
+
