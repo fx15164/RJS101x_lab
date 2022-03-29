@@ -3,8 +3,24 @@ import { baseUrl } from '../shared/baseUrl';
 
 export const fetchDishes = () => {
 	return dispatch => fetch(baseUrl + 'dishes')
+		.then(
+			res => {
+				if (res.ok) {
+					return res;
+				} else {
+					const err = new Error(`Error ${res.status}: ${res.statusText}`);
+					throw err;
+				}
+			},
+			err => {
+				throw new Error(err.message);
+			}
+		)
 		.then(res => res.json())
-		.then(dishes => dispatch(addDishes(dishes)));
+		.then(dishes => dispatch(addDishes(dishes)))
+		.catch(err => {
+			dispatch(dishesFailed(err.message))
+		})
 }
 
 export const dishesLoading = () => ({
@@ -22,8 +38,22 @@ export const addDishes = (dishes) => ({
 
 export const fetchComments = () => dispatch => {
 	return fetch(baseUrl + 'comments')
+		.then(
+			res => {
+				if (res.ok) {
+					return res;
+				} else {
+					const err = new Error(`Error ${res.status}: ${res.statusText}`);
+					throw err;
+				}
+			},
+			err => {
+				throw new Error(err.message);
+			}
+		)
 		.then(res => res.json())
-		.then(comments => dispatch(addComments(comments)));
+		.then(comments => dispatch(addComments(comments)))
+		.catch(err => dispatch(commentsFailed(err.message)));
 }
 
 export const addComments = (comments) => ({
@@ -41,8 +71,22 @@ export const fetchPromos = () => dispatch => {
 	dispatch(promosLoading());
 
 	return fetch(baseUrl + 'promotions')
+		.then(
+			res => {
+				if (res.ok) {
+					return res;
+				} else {
+					const err = new Error(`Error ${res.status}: ${res.statusText}`);
+					throw err;
+				}
+			},
+			err => {
+				throw new Error(err.message);
+			}
+		)
 		.then(res => res.json())
-		.then(promos => dispatch(addPromos(promos)));
+		.then(promos => dispatch(addPromos(promos)))
+		.catch(err => dispatch(promosFailed(err.message)));
 }
 
 export const promosLoading = () => ({
