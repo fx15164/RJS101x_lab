@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {Field, Form} from 'react-final-form';
-import {Button, Modal, ModalBody, FormFeedback, Form as RsForm, FormGroup, Label, Input} from 'reactstrap';
+import {Button, Modal, ModalBody, FormGroup, Label, Input} from 'reactstrap';
 
 const CommentForm = ({ dish, postComment }) => {
 	const [isOpen, setIsOpen] = useState(false);
