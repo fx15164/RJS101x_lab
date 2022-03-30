@@ -9,7 +9,8 @@ import Contact from './ContactComponent';
 import {withRouter} from 'react-router-dom';
 import {connect} from 'react-redux';
 import { reset } from 'redux-form';
-import { addComment, fetchComments, fetchDishes, fetchPromos, postComment } from '../redux/actionCreators';
+import { fetchComments, fetchDishes, fetchPromos, postComment } from '../redux/actionCreators';
+import { TransitionGroup, CSSTransition } from 'react-transition-group';
 
 class Main extends Component {
 
@@ -54,13 +55,17 @@ class Main extends Component {
         return (
             <div>
                 <Header />
-                <Switch>
-                    <Route path='/home' component={HomePage} />
-                    <Route exact path='/menu' component={() => <Menu dishes={dishes.dishes} />} />
-                    <Route path='/menu/:dishId' component={DishWithId} />
-					<Route path='/contactus' component={() => <Contact resetFeedbackForm={resetFeedbackForm} />} />
-                    <Redirect to='/home' />
-                </Switch>
+				<TransitionGroup>
+					<CSSTransition key={this.props.location.key} classNames="page" timeout={300}>
+						<Switch >
+							<Route path='/home' component={HomePage} />
+							<Route exact path='/menu' component={() => <Menu dishes={dishes.dishes} />} />
+							<Route path='/menu/:dishId' component={DishWithId} />
+							<Route path='/contactus' component={() => <Contact resetFeedbackForm={resetFeedbackForm} />} />
+							<Redirect to='/home' />
+						</Switch>
+					</CSSTransition>
+				</TransitionGroup>
                 <Footer />
             </div>
         );
